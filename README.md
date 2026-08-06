@@ -26,7 +26,7 @@ Respuesta comprobada el 6 de agosto de 2026:
 - Node.js 20 o superior.
 - Express 5 para el servidor HTTP.
 - PostgreSQL y `pg` para la persistencia.
-- `dotenv` para cargar variables locales.
+- `dotenv` como compatibilidad opcional para pruebas locales; Render no depende de archivos `.env`.
 - `helmet` para cabeceras de seguridad.
 - `cors` para permitir el consumo externo de la API.
 
@@ -34,15 +34,17 @@ Las versiones exactas y sus integridades se encuentran bloqueadas en `package-lo
 
 ## Variables de entorno
 
-Copia `.env.example` como `.env` y sustituye únicamente los valores locales. El archivo `.env` está ignorado por Git para evitar exponer credenciales.
+La API no requiere un archivo `.env` ni un archivo de ejemplo para funcionar. En producción, Render proporciona las variables directamente al proceso de Node.js. `PORT` es asignada por la plataforma; `NODE_ENV` y `DB_SSL` están declaradas en `render.yaml`; y `DATABASE_URL` se captura en Render como secreto durante la creación del Blueprint.
 
-| Variable | Obligatoria | Ejemplo seguro | Descripción |
-|---|---:|---|---|
-| `PORT` | No | `3000` | Puerto local. Render lo asigna automáticamente. |
-| `NODE_ENV` | Sí en producción | `production` | Activa el comportamiento de producción. |
-| `DATABASE_URL` | Sí | `postgresql://usuario:***@host:5432/tareas` | Cadena privada de PostgreSQL. No debe publicarse. |
-| `DB_SSL` | Sí con Supabase | `true` | Activa TLS para la conexión externa a Supabase. |
-| `USE_IN_MEMORY_DB` | Solo desarrollo | `true` | Permite una demostración local sin PostgreSQL. Nunca usar en producción. |
+| Variable | Configuración en producción | Descripción |
+|---|---|---|
+| `PORT` | Automática | Puerto HTTP asignado por Render. |
+| `NODE_ENV` | `production` en `render.yaml` | Activa el comportamiento de producción. |
+| `DATABASE_URL` | Secreto de Render | URI Session pooler privada de PostgreSQL en Supabase. |
+| `DB_SSL` | `true` en `render.yaml` | Activa TLS para la conexión con Supabase. |
+| `USE_IN_MEMORY_DB` | No se configura | Se utiliza únicamente para pruebas o demostraciones locales. |
+
+Las contraseñas y cadenas privadas de conexión no se almacenan en GitHub.
 
 ## Ejecución local
 
@@ -60,9 +62,15 @@ La API queda disponible en `http://localhost:3000`. Los datos de este modo se bo
 ### Opción local con PostgreSQL o Supabase
 
 1. En Supabase abre **Connect > Session pooler** y copia la URI del puerto `5432`.
-2. Copia `.env.example` como `.env`.
-3. Coloca la URI real en `DATABASE_URL`, conserva `DB_SSL=true` y deja `USE_IN_MEMORY_DB=false`.
-4. Ejecuta:
+2. Define las variables directamente en la terminal de PowerShell de esa sesión:
+
+```powershell
+$env:DATABASE_URL='PEGA_AQUI_LA_URI_PRIVADA_DE_SUPABASE'
+$env:DB_SSL='true'
+$env:USE_IN_MEMORY_DB='false'
+```
+
+3. Ejecuta:
 
 ```bash
 npm install
@@ -178,7 +186,7 @@ El Hola mundo no utilizaba una base de datos y no podía demostrar operaciones C
 
 ## Seguridad aplicada
 
-- `.env` y sus variantes están excluidos del repositorio.
+- El despliegue no utiliza archivos `.env`; Render administra las variables y secretos directamente.
 - No hay contraseñas, tokens ni cadenas privadas de conexión en el código o la documentación; únicamente se publica la URL HTTP de la API.
 - Las consultas utilizan parámetros (`$1`, `$2`, etc.) para evitar inyección SQL.
 - El cuerpo JSON tiene un límite de 20 KB y valida tipos, campos y longitudes.
