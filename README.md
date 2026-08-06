@@ -151,9 +151,9 @@ La colección realiza en orden las seis solicitudes exigidas:
 | GET | `/` | 200 y mensaje de bienvenida |
 | GET | `/api/tareas` | 200 y arreglo de tareas |
 | POST | `/api/tareas` | 201 y tarea creada |
-| PUT | `/api/tareas/{{tareaId}}` | 200 y `completada: true` |
-| DELETE | `/api/tareas/{{tareaId}}` | 204 sin contenido |
-| GET | `/api/tareas/{{tareaId}}` | 404, prueba de error correcta |
+| PUT | `/api/tareas/3` | 200 y `completada: true` |
+| DELETE | `/api/tareas/3` | 204 sin contenido |
+| GET | `/api/tareas/1` | 404, prueba de error correcta |
 
 El identificador generado por POST se guarda automáticamente en `tareaId`, por lo que no es necesario copiarlo manualmente.
 
