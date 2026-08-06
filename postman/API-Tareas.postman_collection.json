@@ -1,0 +1,146 @@
+{
+  "info": {
+    "_postman_id": "f7625477-b980-43ce-a5f4-68fed2c22bc6",
+    "name": "Evidencia U4 E1 - API de tareas",
+    "description": "Seis solicitudes requeridas: dos GET, un POST, un PUT, un DELETE y una prueba de error.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "tareaId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "1 - GET endpoint principal",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Estado 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 - GET lista de tareas",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/tareas"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+              "pm.test('Devuelve una lista', () => pm.expect(pm.response.json().datos).to.be.an('array'));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "3 - POST crear tarea",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titulo\": \"Probar API en Postman\",\n  \"descripcion\": \"Solicitud creada para la evidencia\",\n  \"completada\": false\n}"
+        },
+        "url": "{{baseUrl}}/api/tareas"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Estado 201', () => pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('tareaId', pm.response.json().datos.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "4 - PUT actualizar tarea",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titulo\": \"Probar API en Postman\",\n  \"descripcion\": \"Solicitud actualizada correctamente\",\n  \"completada\": true\n}"
+        },
+        "url": "{{baseUrl}}/api/tareas/{{tareaId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Estado 200', () => pm.response.to.have.status(200));",
+              "pm.test('Quedó completada', () => pm.expect(pm.response.json().datos.completada).to.eql(true));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "5 - DELETE eliminar tarea",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/api/tareas/{{tareaId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Estado 204', () => pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "6 - GET recurso inexistente (error controlado)",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/tareas/{{tareaId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Estado 404', () => pm.response.to.have.status(404));",
+              "pm.test('Mensaje claro', () => pm.expect(pm.response.json().error).to.eql('Tarea no encontrada.'));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

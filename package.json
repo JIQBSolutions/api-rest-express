@@ -1,0 +1,29 @@
+{
+  "name": "api-rest-express",
+  "version": "1.0.0",
+  "description": "API REST de tareas con Express y PostgreSQL, preparada para Render.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "express",
+    "rest-api",
+    "postgresql",
+    "render"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "pg": "^8.16.3"
+  }
+}
