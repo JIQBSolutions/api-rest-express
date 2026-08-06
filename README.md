@@ -1,6 +1,6 @@
 # API REST de tareas
 
-API desarrollada con Express y PostgreSQL para la evidencia **U4 > E1 - Implementación y despliegue de API**. Conserva el endpoint `Hola World` de la Evidencia 1 de la unidad 3 y agrega un CRUD completo de tareas, validaciones, manejo de errores y configuración de despliegue en Render.
+API desarrollada con Express y PostgreSQL de Supabase para la evidencia **U4 > E1 - Implementación y despliegue de API**. Conserva el endpoint `Hola World` de la Evidencia 1 de la unidad 3 y agrega un CRUD completo de tareas, validaciones, manejo de errores y configuración de despliegue en Render.
 
 ## URL pública
 
@@ -41,7 +41,7 @@ Copia `.env.example` como `.env` y sustituye únicamente los valores locales. El
 | `PORT` | No | `3000` | Puerto local. Render lo asigna automáticamente. |
 | `NODE_ENV` | Sí en producción | `production` | Activa el comportamiento de producción. |
 | `DATABASE_URL` | Sí | `postgresql://usuario:***@host:5432/tareas` | Cadena privada de PostgreSQL. No debe publicarse. |
-| `DB_SSL` | No | `false` | Usar `true` si el proveedor exige TLS. La conexión interna de Render usa `false`. |
+| `DB_SSL` | Sí con Supabase | `true` | Activa TLS para la conexión externa a Supabase. |
 | `USE_IN_MEMORY_DB` | Solo desarrollo | `true` | Permite una demostración local sin PostgreSQL. Nunca usar en producción. |
 
 ## Ejecución local
@@ -57,11 +57,11 @@ npm start
 
 La API queda disponible en `http://localhost:3000`. Los datos de este modo se borran al reiniciar y no reemplazan la base de datos de producción.
 
-### Opción local con PostgreSQL
+### Opción local con PostgreSQL o Supabase
 
-1. Crea una base llamada `tareas`.
+1. En Supabase abre **Connect > Session pooler** y copia la URI del puerto `5432`.
 2. Copia `.env.example` como `.env`.
-3. Coloca la cadena real en `DATABASE_URL` y deja `USE_IN_MEMORY_DB=false`.
+3. Coloca la URI real en `DATABASE_URL`, conserva `DB_SSL=true` y deja `USE_IN_MEMORY_DB=false`.
 4. Ejecuta:
 
 ```bash
@@ -154,16 +154,17 @@ El identificador generado por POST se guarda automáticamente en `tareaId`, por 
 
 ## Despliegue en Render
 
-El archivo `render.yaml` define un servicio web gratuito y una base PostgreSQL gratuita, conectados mediante una variable privada generada por Render.
+El archivo `render.yaml` define un servicio web gratuito y solicita la conexión de Supabase como una variable privada durante la creación del Blueprint.
 
 1. Publica esta carpeta en un repositorio Git remoto.
 2. En Render selecciona **New > Blueprint** y conecta el repositorio.
-3. Confirma la creación de `api-tareas-express` y `api-tareas-db`.
-4. Espera a que el evento muestre **Live**.
-5. Abre `/api/health`; debe responder `200` y `baseDeDatos: conectada`.
-6. Copia la URL pública y colócala en este README y en la variable `baseUrl` de Postman.
+3. Cuando Render solicite `DATABASE_URL`, pega la URI **Session pooler** de Supabase con tu contraseña; no la guardes en Git.
+4. Confirma la creación de `api-tareas-express`.
+5. Espera a que el evento muestre **Live**.
+6. Abre `/api/health`; debe responder `200` y `baseDeDatos: conectada`.
+7. Copia la URL pública y colócala en este README y en la variable `baseUrl` de Postman.
 
-Render inyecta `DATABASE_URL` desde PostgreSQL; la contraseña nunca aparece en el código ni en `render.yaml`. El plan gratuito de PostgreSQL es suficiente para la evidencia, aunque Render indica que expira 30 días después de su creación.
+Render guarda `DATABASE_URL` como secreto porque el Blueprint la declara con `sync: false`; la contraseña nunca aparece en el código ni en `render.yaml`. La tabla `tareas` se crea automáticamente en Supabase durante el primer arranque.
 
 ## Problemas encontrados y solución
 
@@ -173,7 +174,7 @@ La versión inicial escuchaba únicamente en el puerto `3000`. Las plataformas c
 
 ### 2. La API original no tenía persistencia
 
-El Hola mundo no utilizaba una base de datos y no podía demostrar operaciones CRUD ni persistencia en producción. Se agregó PostgreSQL, creación automática de la tabla y la variable privada `DATABASE_URL`. Render conecta ambos recursos sin publicar usuario ni contraseña.
+El Hola mundo no utilizaba una base de datos y no podía demostrar operaciones CRUD ni persistencia en producción. Se agregó PostgreSQL en Supabase, creación automática de la tabla y la variable privada `DATABASE_URL`. Render recibe la conexión como secreto sin publicar usuario ni contraseña.
 
 ## Seguridad aplicada
 
