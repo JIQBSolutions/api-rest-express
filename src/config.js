@@ -2,6 +2,7 @@ const path = require("node:path");
 
 require("dotenv").config({ path: path.resolve(process.cwd(), ".env") });
 
+// Carga la configuración de ambiente y valida los valores necesarios.
 function loadConfig() {
   const nodeEnv = process.env.NODE_ENV || "development";
   const port = Number.parseInt(process.env.PORT || "3000", 10);

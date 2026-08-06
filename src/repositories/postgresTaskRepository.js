@@ -1,5 +1,6 @@
 const { Pool } = require("pg");
 
+// Repositorio de tareas usando PostgreSQL y conexión en pool.
 class PostgresTaskRepository {
   constructor({ connectionString, ssl }) {
     this.pool = new Pool({

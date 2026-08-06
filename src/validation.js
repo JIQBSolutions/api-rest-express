@@ -1,3 +1,4 @@
+// Validaciones compartidas para la API de tareas.
 class HttpError extends Error {
   constructor(status, message) {
     super(message);

@@ -2,6 +2,8 @@ const { createApp } = require("./app");
 const { loadConfig } = require("./config");
 const { createTaskRepository } = require("./repositories");
 
+// Punto de entrada de la aplicación. Carga la configuración, inicializa
+// el repositorio de tareas y levanta el servidor HTTP.
 async function startServer() {
   const config = loadConfig();
   const repository = createTaskRepository(config);

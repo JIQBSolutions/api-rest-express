@@ -1,3 +1,4 @@
+// Repositorio de tareas en memoria, útil para desarrollo y pruebas rápidas.
 class MemoryTaskRepository {
   constructor() {
     this.tasks = new Map();

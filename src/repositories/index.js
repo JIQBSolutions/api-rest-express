@@ -1,6 +1,7 @@
 const { MemoryTaskRepository } = require("./memoryTaskRepository");
 const { PostgresTaskRepository } = require("./postgresTaskRepository");
 
+// Crea el repositorio de tareas adecuado según la configuración.
 function createTaskRepository(config) {
   if (config.useMemoryDb) {
     return new MemoryTaskRepository();
