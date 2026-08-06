@@ -1,7 +1,7 @@
 {
   "name": "api-rest-express",
   "version": "1.0.0",
-  "description": "API REST de tareas con Express y PostgreSQL, preparada para Render.",
+  "description": "API REST de tareas con Express, PostgreSQL de Supabase y despliegue en Render.",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
@@ -15,6 +15,7 @@
     "express",
     "rest-api",
     "postgresql",
+    "supabase",
     "render"
   ],
   "author": "",

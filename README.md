@@ -4,15 +4,15 @@ API desarrollada con Express y PostgreSQL de Supabase para la evidencia **U4 > E
 
 ## URL pública
 
-> Pendiente: reemplazar este texto con la URL `https://...onrender.com` que Render entrega al crear el Blueprint.
+**Producción:** https://api-tareas-express.onrender.com
 
-Una vez desplegada, la comprobación principal se realiza en:
+Comprobación de servidor y conexión con Supabase:
 
 ```text
-GET https://TU-SERVICIO.onrender.com/api/health
+GET https://api-tareas-express.onrender.com/api/health
 ```
 
-La respuesta esperada es:
+Respuesta comprobada el 6 de agosto de 2026:
 
 ```json
 {
@@ -134,7 +134,7 @@ La suite comprueba el Hola mundo, listado, creación, actualización, eliminaci�
 ## Pruebas con Postman
 
 1. Importa `postman/API-Tareas.postman_collection.json`.
-2. Cambia la variable de colección `baseUrl` por la URL pública, sin diagonal final.
+2. Confirma que la variable de colección `baseUrl` tenga `https://api-tareas-express.onrender.com`, sin diagonal final.
 3. Ejecuta toda la colección con **Run collection**.
 
 La colección realiza en orden las seis solicitudes exigidas:
@@ -150,7 +150,7 @@ La colección realiza en orden las seis solicitudes exigidas:
 
 El identificador generado por POST se guarda automáticamente en `tareaId`, por lo que no es necesario copiarlo manualmente.
 
-Última ejecución local de la colección con el runner de Postman: **6 solicitudes ejecutadas, 0 fallidas; 9 validaciones ejecutadas, 0 fallidas**. Después del despliegue debe repetirse cambiando `baseUrl` por la URL pública para demostrar el consumo desde Internet.
+Última ejecución contra la API pública en Render, el 6 de agosto de 2026: **6 solicitudes ejecutadas, 0 fallidas; 9 validaciones ejecutadas, 0 fallidas**. Se comprobaron los estados `200`, `201`, `204` y el error controlado `404` usando PostgreSQL de Supabase.
 
 ## Despliegue en Render
 
@@ -162,7 +162,7 @@ El archivo `render.yaml` define un servicio web gratuito y solicita la conexión
 4. Confirma la creación de `api-tareas-express`.
 5. Espera a que el evento muestre **Live**.
 6. Abre `/api/health`; debe responder `200` y `baseDeDatos: conectada`.
-7. Copia la URL pública y colócala en este README y en la variable `baseUrl` de Postman.
+7. Copia la URL pública y colócala en este README y en la variable `baseUrl` de Postman. En este proyecto ya quedó configurada como `https://api-tareas-express.onrender.com`.
 
 Render guarda `DATABASE_URL` como secreto porque el Blueprint la declara con `sync: false`; la contraseña nunca aparece en el código ni en `render.yaml`. La tabla `tareas` se crea automáticamente en Supabase durante el primer arranque.
 
@@ -179,7 +179,7 @@ El Hola mundo no utilizaba una base de datos y no podía demostrar operaciones C
 ## Seguridad aplicada
 
 - `.env` y sus variantes están excluidos del repositorio.
-- No hay contraseñas, tokens ni URL reales en el código o la documentación.
+- No hay contraseñas, tokens ni cadenas privadas de conexión en el código o la documentación; únicamente se publica la URL HTTP de la API.
 - Las consultas utilizan parámetros (`$1`, `$2`, etc.) para evitar inyección SQL.
 - El cuerpo JSON tiene un límite de 20 KB y valida tipos, campos y longitudes.
 - En producción, los errores internos no exponen detalles del servidor.

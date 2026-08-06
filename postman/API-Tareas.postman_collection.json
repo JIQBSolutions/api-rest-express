@@ -8,7 +8,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:3000"
+      "value": "https://api-tareas-express.onrender.com"
     },
     {
       "key": "tareaId",
